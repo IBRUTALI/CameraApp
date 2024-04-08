@@ -19,26 +19,17 @@ import androidx.camera.video.VideoRecordEvent
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.video.AudioConfig
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
 import com.ighorosipov.cameraapp.presentation.camera.CameraViewModel
-import com.ighorosipov.cameraapp.presentation.ui.components.screens.CameraScreen
-import com.ighorosipov.cameraapp.presentation.ui.components.PhotoBottomSheetContent
+import com.ighorosipov.cameraapp.presentation.ui.components.navigation.RootNavigationGraph
 import com.ighorosipov.cameraapp.presentation.ui.theme.CameraAppTheme
-import kotlinx.coroutines.launch
 import java.io.File
 
 class MainActivity : ComponentActivity() {
@@ -57,49 +48,38 @@ class MainActivity : ComponentActivity() {
         }
         setContent {
             CameraAppTheme {
-                val scope = rememberCoroutineScope()
-                val scaffoldState = rememberBottomSheetScaffoldState()
-                val controller = remember {
-                    LifecycleCameraController(applicationContext).apply {
-                        setEnabledUseCases(
-                            CameraController.IMAGE_CAPTURE or
-                                    CameraController.VIDEO_CAPTURE
-                        )
-                    }
-                }
-                val viewModel = viewModel<CameraViewModel>()
-                val bitmaps by viewModel.bitmaps.collectAsState()
-                BottomSheetScaffold(
-                    scaffoldState = scaffoldState,
-                    sheetPeekHeight = 0.dp,
-                    sheetContent = {
-                        PhotoBottomSheetContent(
-                            bitmaps = bitmaps,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                ) { paddingValues ->
-                    CameraScreen(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(paddingValues),
-                        controller = controller,
-                        onGalleryClick = {
-                            scope.launch {
-                                scaffoldState.bottomSheetState.expand()
-                            }
-                        },
-                        onTakePhoto = {
-                            takePhoto(
-                                controller = controller,
-                                onPhotoTaken = viewModel::onTakePhoto
-                            )
-                        },
-                        onRecordClick = {
-                            recordVideo(controller)
-                        }
-                    )
-                }
+                RootNavigationGraph(navController = rememberNavController())
+//                BottomSheetScaffold(
+//                    scaffoldState = scaffoldState,
+//                    sheetPeekHeight = 0.dp,
+//                    sheetContent = {
+//                        PhotoBottomSheetContent(
+//                            bitmaps = bitmaps,
+//                            modifier = Modifier.fillMaxWidth()
+//                        )
+//                    }
+//                ) { paddingValues ->
+//                    CameraScreen(
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .padding(paddingValues),
+//                        controller = controller,
+//                        onGalleryClick = {
+//                            scope.launch {
+//                                scaffoldState.bottomSheetState.expand()
+//                            }
+//                        },
+//                        onTakePhoto = {
+//                            takePhoto(
+//                                controller = controller,
+//                                onPhotoTaken = viewModel::onTakePhoto
+//                            )
+//                        },
+//                        onRecordClick = {
+//                            recordVideo(controller)
+//                        }
+//                    )
+//                }
             }
         }
     }
@@ -193,7 +173,7 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
-        private val CAMERAX_PERMISSIONS = arrayOf(
+        val CAMERAX_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
             Manifest.permission.RECORD_AUDIO
         )

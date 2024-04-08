@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">CameraApp</string>
     <string name="there_are_no_photos_yet">There are no photos yet</string>
+    <string name="main">Главная</string>
+    <string name="camera">Камера</string>
+    <string name="profile">Профиль</string>
 </resources>
