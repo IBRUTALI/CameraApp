@@ -3,6 +3,7 @@ package com.ighorosipov.cameraapp.data.repository
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
+import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.OutputFileOptions
 import androidx.camera.core.ImageCaptureException
@@ -17,20 +18,15 @@ import com.ighorosipov.cameraapp.MainActivity
 import com.ighorosipov.cameraapp.domain.repository.CameraService
 import com.ighorosipov.cameraapp.domain.util.Resource
 import java.io.File
+import javax.inject.Inject
 
-class CameraServiceImpl(
-   private val context: Context
+class CameraServiceImpl @Inject constructor(
+    private val context: Context
 ): CameraService {
 
     private var recording: Recording? = null
 
-    val controller =
-        LifecycleCameraController(context).apply {
-            setEnabledUseCases(
-                CameraController.IMAGE_CAPTURE or
-                        CameraController.VIDEO_CAPTURE
-            )
-        }
+    //@Inject val controller
 
     @SuppressLint("MissingPermission")
     override fun recordVideo(): Resource<String> {
@@ -93,6 +89,15 @@ class CameraServiceImpl(
         )
 
         return result
+    }
+
+    override fun changeCameraMode() {
+        controller.cameraSelector =
+            if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+                CameraSelector.DEFAULT_FRONT_CAMERA
+            } else {
+                CameraSelector.DEFAULT_BACK_CAMERA
+            }
     }
 
     private fun hasRequiredPermissions(): Boolean {

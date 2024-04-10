@@ -1,8 +1,5 @@
 package com.ighorosipov.cameraapp.presentation.camera
 
-import android.widget.Toast
-import androidx.camera.core.CameraSelector
-import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -29,8 +26,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ighorosipov.cameraapp.data.repository.CameraServiceImpl
-import com.ighorosipov.cameraapp.domain.util.Resource
 import com.ighorosipov.cameraapp.presentation.ui.components.CameraPreview
 import com.ighorosipov.cameraapp.presentation.ui.components.PhotoBottomSheetContent
 import kotlinx.coroutines.launch
@@ -38,19 +33,17 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CameraScreen(
-    modifier: Modifier = Modifier,
-    onGalleryClick: () -> Unit,
-    onTakePhoto: () -> Unit,
-    onRecordClick: () -> Unit
+    modifier: Modifier = Modifier
 ) {
-    val cameraService = CameraServiceImpl(LocalContext.current)
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
-    val controller = remember {
-        cameraService.controller
-    }
     val context = LocalContext.current
     val viewModel = viewModel<CameraViewModel>()
+
+    val controller = remember {
+        viewModel.getController()
+    }
+
     BottomSheetScaffold(
         scaffoldState = scaffoldState,
         sheetPeekHeight = 0.dp,
@@ -72,12 +65,7 @@ fun CameraScreen(
                 imageVector = Icons.Default.Cameraswitch,
                 modifier = Modifier.offset(16.dp, 16.dp)
             ) {
-                controller.cameraSelector =
-                    if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                        CameraSelector.DEFAULT_FRONT_CAMERA
-                    } else {
-                        CameraSelector.DEFAULT_BACK_CAMERA
-                    }
+                viewModel.changeCameraMode()
             }
             Row(
                 modifier = Modifier
@@ -92,16 +80,10 @@ fun CameraScreen(
                     }
                 }
                 SmallIcon(imageVector = Icons.Default.PhotoCamera) {
-                    cameraService.takePhoto().apply {
-                        when(this) {
-                            is Resource.Success -> Toast.makeText(context, this.data, Toast.LENGTH_SHORT).show()
-                            is Resource.Error -> Toast.makeText(context, this.message, Toast.LENGTH_SHORT).show()
-                            is Resource.Loading -> {}
-                        }
-                    }
+                    viewModel.onTakePhoto()
                 }
                 SmallIcon(imageVector = Icons.Default.Videocam) {
-                    cameraService.recordVideo()
+                    viewModel.recordVideo()
                 }
             }
         }

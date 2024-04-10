@@ -8,4 +8,6 @@ interface CameraService {
 
     fun takePhoto(): Resource<String>
 
+    fun changeCameraMode()
+
 }
