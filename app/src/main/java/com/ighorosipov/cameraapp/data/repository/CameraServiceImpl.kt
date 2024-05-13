@@ -26,7 +26,13 @@ class CameraServiceImpl @Inject constructor(
 
     private var recording: Recording? = null
 
-    //@Inject val controller
+    private val controller =
+        LifecycleCameraController(context).apply {
+            setEnabledUseCases(
+                CameraController.IMAGE_CAPTURE or
+                        CameraController.VIDEO_CAPTURE
+            )
+        }
 
     @SuppressLint("MissingPermission")
     override fun recordVideo(): Resource<String> {
@@ -98,6 +104,10 @@ class CameraServiceImpl @Inject constructor(
             } else {
                 CameraSelector.DEFAULT_BACK_CAMERA
             }
+    }
+
+    override fun getController(): LifecycleCameraController {
+        return controller
     }
 
     private fun hasRequiredPermissions(): Boolean {

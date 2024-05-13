@@ -1,5 +1,6 @@
 package com.ighorosipov.cameraapp.presentation.camera
 
+import androidx.camera.view.LifecycleCameraController
 import androidx.lifecycle.ViewModel
 import com.ighorosipov.cameraapp.domain.repository.CameraService
 import com.ighorosipov.cameraapp.domain.util.Resource
@@ -31,6 +32,10 @@ class CameraViewModel @Inject constructor(
 
     fun changeCameraMode() {
         cameraService.changeCameraMode()
+    }
+
+    fun getController(): LifecycleCameraController {
+        return cameraService.getController()
     }
 
 }

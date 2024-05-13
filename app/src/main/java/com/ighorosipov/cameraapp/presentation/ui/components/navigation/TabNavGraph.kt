@@ -24,10 +24,8 @@ fun TabNavGraph(
         }
         composable(route = Screen.CameraScreen.route) {
             CameraScreen(
-                modifier = modifier,
-                onGalleryClick = {  },
-                onTakePhoto = {  },
-                onRecordClick = {  })
+                modifier = modifier
+            )
         }
         composable(route = Screen.ProfileScreen.route) {
             ProfileScreen(modifier = modifier)
