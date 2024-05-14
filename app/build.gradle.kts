@@ -72,7 +72,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.lifecycle.viewmodel.compose)
 
     //CameraX
     implementation(libs.androidx.camera.core)
@@ -85,7 +84,6 @@ dependencies {
     //Hilt
     implementation(libs.hilt.android)
     ksp( libs.hilt.android.compiler)
-    ksp( libs.androidx.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
 }

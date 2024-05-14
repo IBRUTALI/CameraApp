@@ -25,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ighorosipov.cameraapp.presentation.ui.components.CameraPreview
 import com.ighorosipov.cameraapp.presentation.ui.components.PhotoBottomSheetContent
 import kotlinx.coroutines.launch
@@ -38,7 +38,7 @@ fun CameraScreen(
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     val context = LocalContext.current
-    val viewModel = viewModel<CameraViewModel>()
+    val viewModel = hiltViewModel<CameraViewModel>()
 
     val controller = remember {
         viewModel.getController()
